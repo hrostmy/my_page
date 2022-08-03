@@ -1,12 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.urls import reverse
+from django.template.loader import render_to_string
+
 
 # Create your views here.
-# def leo(request):
-#     return HttpResponse('Знак зодіаку - лев')
 
-# def scorpio(request):
-#     return HttpResponse('Знак зодіаку - cкорпіон')
 zodiac_dict = {
     'aries': 'Овен - первый знак зодиака, планета Марс (с 21 марта по 20 апреля).',
     'taurus': 'Телец - второй знак зодиака, планета Венера (с 21 апреля по 21 мая).',
@@ -24,12 +23,19 @@ zodiac_dict = {
 
 
 def get_info_about_sign_zodiac(request, sign_zodiac: str):
-    description = zodiac_dict.get(sign_zodiac, None)
-    if description:
-        return HttpResponse(description)
-    else:
-        return HttpResponseNotFound(f'Путін хуйло - {sign_zodiac}')
+    description = zodiac_dict.get(sign_zodiac)
+    data = {
+        'description_zodiac' : description,
+        'sign' : sign_zodiac,
+    }
+    response = render_to_string('horoscope/info_zodiac.html', context=data)
+    return HttpResponse(response)
 
 
 def get_info_about_sign_zodiac_by_number(request, sign_zodiac: int):
-    print(f'This is number{sign_zodiac}')
+    zodiacs = list(zodiac_dict)
+    if sign_zodiac > len(zodiacs):
+        return HttpResponseNotFound(f'Неправильний порядковий номер знаку - {sign_zodiac}')
+    name_zodiac = zodiacs[sign_zodiac-1]
+    redirect_url = reverse('horoscope-name', args=(name_zodiac, ))
+    return HttpResponseRedirect(redirect_url)

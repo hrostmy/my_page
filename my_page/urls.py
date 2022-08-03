@@ -17,8 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from horoscope import views
 urlpatterns = [
-    path('<int:sign_zodiac>/', views.get_info_about_sign_zodiac_by_number),
-    path('<str:sign_zodiac>/', views.get_info_about_sign_zodiac),
+    path('horoscope/'+'<int:sign_zodiac>/', views.get_info_about_sign_zodiac_by_number),
+    path('horoscope/'+'<str:sign_zodiac>/', views.get_info_about_sign_zodiac, name='horoscope-name'),
     # path('horoscope/leo', views.leo),
     # path('horoscope/scorpio', views.scorpio)
 ]
