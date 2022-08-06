@@ -7,5 +7,10 @@
 <body>
     <h1>Додаток Гороскоп</h1>
     <h2>{{description_zodiac}}</h2>
+<ul>
+    {% for zodiac in zodiac_dict %}
+    <li>{{ zodiac|title}}</li>
+    {% endfor %}
+</ul>
 </body>
 </html>
