@@ -5,6 +5,7 @@ from django.template.loader import render_to_string
 
 
 # Create your views here.
+from requests import Request
 
 zodiac_dict = {
     'aries': 'Овен - первый знак зодиака, планета Марс (с 21 марта по 20 апреля).',
@@ -32,10 +33,13 @@ def get_info_about_sign_zodiac(request, sign_zodiac: str):
     return HttpResponse(response)
 
 
-def get_info_about_sign_zodiac_by_number(request, sign_zodiac: int):
-    zodiacs = list(zodiac_dict)
-    if sign_zodiac > len(zodiacs):
-        return HttpResponseNotFound(f'Неправильний порядковий номер знаку - {sign_zodiac}')
-    name_zodiac = zodiacs[sign_zodiac-1]
-    redirect_url = reverse('horoscope-name', args=(name_zodiac, ))
-    return HttpResponseRedirect(redirect_url)
+def get_info_about_sign_zodiac_by_number(request: Request, sign_zodiac: int):
+    if request.method == 'GET':
+        zodiacs = list(zodiac_dict)
+        if sign_zodiac > len(zodiacs):
+            return HttpResponseNotFound(f'Неправильний порядковий номер знаку - {sign_zodiac}')
+        name_zodiac = zodiacs[sign_zodiac-1]
+        redirect_url = reverse('horoscope-name', args=[name_zodiac])
+        return HttpResponseRedirect(redirect_url)
+    else:
+        raise ConnectionError
